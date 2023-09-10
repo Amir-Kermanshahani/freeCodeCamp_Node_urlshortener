@@ -24,7 +24,7 @@ const urlSchema = new Schema({
   original_url: String,
   short_url: String
 })
-const URL = mongoose.model("URL", urlSchema);;
+const URL = mongoose.model("URL", urlSchema);
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -50,9 +50,8 @@ app.post('/api/shorturl', async function(req, res) {
   const urlCode = shortid.generate()
   dns.lookup(url, function(err, data) {
     if (err) {res.status(401).json({error: 'invalid URL'})}
-    async () => {
       try {
-        let findOne = await URL.findOne({
+        let findOne =  URL.findOne({
           original_url: url
         })
         if (findOne) {
@@ -60,7 +59,7 @@ app.post('/api/shorturl', async function(req, res) {
             original_url: url,
             short_url: urlCode
           })
-          await findOne.save()
+           findOne.save()
           res.json({
             original_url: findOne.original_url,
             short_url: findOne.short_url
@@ -70,7 +69,7 @@ app.post('/api/shorturl', async function(req, res) {
         console.error(err)
         res.status(500).json("Server error ...")
       }
-    }
+    
   })
 })
 
