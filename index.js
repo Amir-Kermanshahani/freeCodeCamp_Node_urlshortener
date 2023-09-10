@@ -2,10 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { default: mongoose, connection } = require('mongoose');
-const mongo = require('mongodb');
 const bodyParser = require('body-parser');
 const shortid = require('shortid');
 const app = express();
+const dns = require('dns');
 
 // Connecting to database
 const uri = process.env.MONGO_URI;
@@ -48,7 +48,7 @@ app.get('/api/hello', function(req, res) {
 app.post('/api/shorturl', async function(req, res) {
   const url = req.body.url_input
   const urlCode = shortid.generate()
-  if (!validUrl.isWebUri(url)) {
+  if (!dns.lookup(url)) {
     res.status(401).json({
       error: 'invalid URL'
     })
